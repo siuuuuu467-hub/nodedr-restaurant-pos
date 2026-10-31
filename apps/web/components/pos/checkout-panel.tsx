@@ -135,14 +135,15 @@ export function CheckoutPanel({
   // What the guest has typed in, as numbers. Once a payment has been taken the
   // server locks the figures, so these stop mattering (and are not sent).
   const adjustments = useMemo(
-    () => ({
-      discountPercent: Number(discountPercent) || 0,
-      tipAmount: Number(tipAmount) || 0,
-      loyaltyPointsToRedeem: Math.max(0, Math.floor(Number(pointsToRedeem) || 0)),
-      couponCode: appliedCoupon || undefined,
-    }),
-    [discountPercent, tipAmount, pointsToRedeem, appliedCoupon],
-  );
+  () => ({
+    customerId: customer?.id,
+    discountPercent: Number(discountPercent) || 0,
+    tipAmount: Number(tipAmount) || 0,
+    loyaltyPointsToRedeem: Math.max(0, Math.floor(Number(pointsToRedeem) || 0)),
+    couponCode: appliedCoupon || undefined,
+  }),
+  [customer?.id, discountPercent, tipAmount, pointsToRedeem, appliedCoupon],
+);
   const settled = useDebounced(adjustments);
   // Once any payment is on the bill the server fixes its figures and refuses
   // further adjustments, so none are sent from then on.

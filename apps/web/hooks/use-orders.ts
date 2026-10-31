@@ -79,19 +79,14 @@ export type BillAdjustments = Pick<
 >;
 
 export function useBillPreview(branchId: string | null, orderId: string, adj: BillAdjustments, enabled = true) {
-  // `customerId` only matters at checkout; the server prices from the order.
-  const { customerId: _customerId, ...priced } = adj;
-  void _customerId;
   return useQuery({
-    queryKey: ["orders", "bill", branchId, orderId, priced],
-    queryFn: () => api.post<BillPreview>(`/orders/${orderId}/bill-preview?branchId=${branchId}`, priced),
+    queryKey: ["orders", "bill", branchId, orderId, adj],
+    queryFn: () => api.post<BillPreview>(`/orders/${orderId}/bill-preview?branchId=${branchId}`, adj),
     enabled: !!branchId && enabled,
     retry: false,
-    // Keep the last figures on screen while a changed discount is repriced.
     placeholderData: (previous) => previous,
   });
 }
-
 export function useCheckoutOrder(branchId: string | null) {
   const queryClient = useQueryClient();
   return useMutation({

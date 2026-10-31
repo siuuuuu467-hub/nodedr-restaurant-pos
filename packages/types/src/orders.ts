@@ -151,6 +151,7 @@ const billAdjustmentFields = {
 
 export const billPreviewSchema = z.object({
   ...billAdjustmentFields,
+  customerId: z.string().min(1).optional(),
 });
 export type BillPreviewDto = z.infer<typeof billPreviewSchema>;
 

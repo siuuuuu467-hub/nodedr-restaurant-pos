@@ -1357,13 +1357,27 @@ export class OrdersService {
         balanceDue: 0,
       };
     }
-    const customerId = order.customerId;
-    const { bill, locked, paid, auto, pointsToRedeem } = await this.resolveBill(
-      branchId,
-      order,
-      adj,
-      customerId,
-    );
+    let customerId = order.customerId;
+
+if (!customerId && adj.customerId) {
+  const customer = await this.prisma.customer.findFirst({
+    where: { id: adj.customerId, branchId },
+    select: { id: true },
+  });
+
+  if (!customer) {
+    throw new BadRequestException('Customer not found');
+  }
+
+  customerId = customer.id;
+}
+
+const { bill, locked, paid, auto, pointsToRedeem } = await this.resolveBill(
+  branchId,
+  order,
+  adj,
+  customerId,
+);
     const entry = locked
       ? order.discountType
         ? {
