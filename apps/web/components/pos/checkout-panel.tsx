@@ -1,5 +1,6 @@
 "use client";
 
+import { uuid } from "@/lib/uuid";
 import { kitchenProgress, type PaymentMethodDto } from "@nodedr-restaurant/types";
 import { ArrowLeft, CheckCircle2, ChefHat, Pencil, Printer } from "lucide-react";
 import { useEffect, useMemo, useRef, useState } from "react";
@@ -226,7 +227,7 @@ export function CheckoutPanel({
   const requestIdFor = (payload: unknown) => {
     const key = JSON.stringify(payload);
     if (attempt.current?.key !== key) {
-      attempt.current = { key, id: crypto.randomUUID() };
+      attempt.current = { key, id: uuid() };
     }
     return attempt.current.id;
   };
